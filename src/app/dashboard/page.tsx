@@ -36,7 +36,7 @@ export default function Dashboard() {
 
         // Verify authentication
         const profileResponse = await fetch(
-          "http://localhost:8080/api/profile",
+          `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080"}/api/profile`,
           { headers }
         );
 
@@ -54,7 +54,7 @@ export default function Dashboard() {
 
         // Fetch saved trips
         const tripsResponse = await fetch(
-          "http://localhost:8080/api/trips",
+          `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080"}/api/trips`,
           { headers }
         );
 
