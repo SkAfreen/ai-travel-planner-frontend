@@ -86,7 +86,7 @@ export default function RegisterPage() {
     }
     setLoading(true);
 
-    try {
+        try {
       const response = await fetch(`${API_URL}/api/users`, {
         method: "POST",
         headers: {
@@ -104,25 +104,32 @@ export default function RegisterPage() {
       if (!response.ok) {
         let message = "Registration failed. Please try again.";
 
-        try {
-          const data = await response.json();
-          message = data.message || data.error || message;
-        } catch {
-          // Keep the default error message.
+        const errorText = await response.text();
+
+        if (errorText) {
+          try {
+            const data = JSON.parse(errorText);
+            message = data.message || data.error || message;
+          } catch {
+            message = errorText;
+          }
         }
 
         throw new Error(message);
       }
 
       setSuccess(
-        "Registration successful! Please check your email inbox and click the verification link to activate your account.",
+        "Registration successful! Please check your email inbox and click the verification link to activate your account."
       );
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed.");
+      setError(
+        err instanceof Error ? err.message : "Registration failed."
+      );
     } finally {
       setLoading(false);
     }
   }
+
 
   const inputClass =
     "w-full rounded-xl border border-blue-100 bg-[#e7f0ff] py-3.5 pl-12 pr-4 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200";
